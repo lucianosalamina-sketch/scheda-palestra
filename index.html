@@ -20,8 +20,7 @@ main{max-width:520px;margin:auto;padding:18px 16px 28px}
 h1{font-size:27px;margin:4px 0 4px}.sub{color:#6b7280;margin-bottom:18px}
 .card{background:white;border:1px solid #e5e7eb;border-radius:18px;padding:18px;margin:12px 0;box-shadow:0 2px 8px rgba(0,0,0,.04)}
 .today{border:2px solid #111827}.today small{font-weight:700;text-transform:uppercase}
-button{width:100%;min-height:52px;border:0;border-radius:14px;background:#111827;color:white;font-size:16px;font-weight:700;margin-top:12px}
-button:disabled{opacity:0.4;cursor:not-allowed}
+button{width:100%;min-height:52px;border:0;border-radius:14px;background:#111827;color:white;font-size:16px;font-weight:700;margin-top:12px;cursor:pointer}
 .day{display:flex;align-items:center;gap:12px;padding:13px 0;border-top:1px solid #eee}
 .day:first-child{border-top:0}.dot{width:10px;height:10px;border-radius:50%;background:#9ca3af}.active .dot{background:#111827}
 .day b{min-width:42px}.day span{flex:1}.open{width:auto;min-height:40px;padding:8px 13px;margin:0;font-size:14px}
@@ -86,17 +85,17 @@ document.getElementById("todayDesc").textContent = d.desc;
 
 const todayBtn = document.getElementById("todayBtn");
 if (!d.file) {
-  todayBtn.disabled = true;
-  todayBtn.textContent = "Nessun allenamento oggi";
+  todayBtn.textContent = "Vedi scheda completa";
+  todayBtn.addEventListener("click", () => openPdfFile("scheda_allenamento.pdf", "Scheda Completa"));
 } else {
-  todayBtn.addEventListener("click", () => openDay(d));
+  todayBtn.textContent = "Apri allenamento";
+  todayBtn.addEventListener("click", () => openPdfFile(d.file, d.day));
 }
 
-function openDay(item){
-  if(!item.file) return;
+function openPdfFile(filePath, title){
   const viewer = document.getElementById("viewer");
-  document.getElementById("viewerTitle").textContent = item.day;
-  document.getElementById("pdf").src = item.file;
+  document.getElementById("viewerTitle").textContent = title;
+  document.getElementById("pdf").src = filePath;
   viewer.style.display = "block";
 }
 
@@ -113,7 +112,7 @@ days.forEach(item => {
  if(item.file){
    const b = document.createElement("button");
    b.className = "open"; b.type = "button"; b.textContent = "Apri";
-   b.addEventListener("click", () => openDay(item));
+   b.addEventListener("click", () => openPdfFile(item.file, item.day));
    row.appendChild(b);
  }
  week.appendChild(row);
