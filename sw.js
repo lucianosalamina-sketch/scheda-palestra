@@ -1,17 +1,16 @@
-const CACHE_NAME = 'scheda-palestra-v1';
+const CACHE_NAME = 'scheda-palestra-v2';
 const ASSETS = [
-  './',
-  './index.html',
-  './manifest.json',
-  './icon.png',
-  './scheda_allenamento.pdf',
-  './giorno1.pdf',
-  './giorno2.pdf',
-  './giorno3.pdf',
-  './giorno4.pdf'
+  'index.html',
+  'manifest.json',
+  'icon.png',
+  'scheda_allenamento.pdf',
+  'giorno1.pdf',
+  'giorno2.pdf',
+  'giorno3.pdf',
+  'giorno4.pdf'
 ];
 
-// Installazione Service Worker e salvataggio file in cache
+// Installazione Service Worker e cache dei file
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
@@ -20,7 +19,7 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// Attivazione e pulizia vecchie cache
+// Attivazione e pulizia della vecchia cache
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) => {
@@ -35,14 +34,19 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Recupero dei file dalla cache quando si è offline
+// Strategia di recupero: Cache prima, poi Rete
 self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) {
         return cachedResponse;
       }
-      return fetch(event.request);
+      return fetch(event.request).catch(() => {
+        // Se si è offline e il file non è in cache, evita la schermata di errore bloccante
+        return new Response('Offline: Risorsa non disponibile', {
+          headers: { 'Content-Type': 'text/plain; charset=utf-8' }
+        });
+      });
     })
   );
 });
