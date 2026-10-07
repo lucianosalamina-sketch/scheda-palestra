@@ -1,9 +1,17 @@
 {
-  "name":"Scheda Palestra Luciano",
-  "short_name":"Scheda Palestra",
-  "start_url":"./",
-  "display":"standalone",
-  "background_color":"#f3f4f6",
-  "theme_color":"#111827",
-  "lang":"it"
+  "name": "Scheda Palestra Luciano",
+  "short_name": "Scheda Palestra",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f3f4f6",
+  "theme_color": "#111827",
+  "lang": "it",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
 }
