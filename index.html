@@ -7,7 +7,12 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Scheda Palestra">
+
+<!-- Icone e Web App Manifest -->
 <link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="icon" type="image/png" href="icon.png">
+
 <title>Scheda Palestra</title>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#f3f4f6;color:#111827}
@@ -54,6 +59,11 @@ button:disabled{opacity:0.4;cursor:not-allowed}
 </div>
 
 <script>
+// Registrazione del Service Worker per la PWA
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
+}
+
 const days = [
  {dow:1, name:"Lunedì", day:"Giorno 1", desc:"Petto / Spalle / Tricipiti / Core", file:"giorno1.pdf"},
  {dow:2, name:"Martedì", day:"Giorno 2", desc:"Schiena / Deltoidi posteriori / Bicipiti / Addominali", file:"giorno2.pdf"},
