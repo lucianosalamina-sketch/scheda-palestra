@@ -16,6 +16,7 @@ h1{font-size:27px;margin:4px 0 4px}.sub{color:#6b7280;margin-bottom:18px}
 .card{background:white;border:1px solid #e5e7eb;border-radius:18px;padding:18px;margin:12px 0;box-shadow:0 2px 8px rgba(0,0,0,.04)}
 .today{border:2px solid #111827}.today small{font-weight:700;text-transform:uppercase}
 button{width:100%;min-height:52px;border:0;border-radius:14px;background:#111827;color:white;font-size:16px;font-weight:700;margin-top:12px}
+button:disabled{opacity:0.4;cursor:not-allowed}
 .day{display:flex;align-items:center;gap:12px;padding:13px 0;border-top:1px solid #eee}
 .day:first-child{border-top:0}.dot{width:10px;height:10px;border-radius:50%;background:#9ca3af}.active .dot{background:#111827}
 .day b{min-width:42px}.day span{flex:1}.open{width:auto;min-height:40px;padding:8px 13px;margin:0;font-size:14px}
@@ -54,13 +55,13 @@ button{width:100%;min-height:52px;border:0;border-radius:14px;background:#111827
 
 <script>
 const days = [
- {dow:1,name:"Lunedì",day:"Giorno 1",desc:"Petto / Spalle / Tricipiti / Core",page:1},
- {dow:2,name:"Martedì",day:"Giorno 2",desc:"Schiena / Deltoidi posteriori / Bicipiti / Addominali",page:5},
- {dow:3,name:"Mercoledì",day:"Riposo",desc:"Nessun allenamento programmato",page:null},
- {dow:4,name:"Giovedì",day:"Giorno 3",desc:"Mix gambe / Addominali",page:9},
- {dow:5,name:"Venerdì",day:"Giorno 4",desc:"Mix parte superiore",page:13},
- {dow:6,name:"Sabato",day:"Riposo",desc:"Nessun allenamento programmato",page:null},
- {dow:0,name:"Domenica",day:"Riposo",desc:"Nessun allenamento programmato",page:null}
+ {dow:1, name:"Lunedì", day:"Giorno 1", desc:"Petto / Spalle / Tricipiti / Core", file:"giorno1.pdf"},
+ {dow:2, name:"Martedì", day:"Giorno 2", desc:"Schiena / Deltoidi posteriori / Bicipiti / Addominali", file:"giorno2.pdf"},
+ {dow:3, name:"Mercoledì", day:"Riposo", desc:"Nessun allenamento programmato", file:null},
+ {dow:4, name:"Giovedì", day:"Giorno 3", desc:"Mix gambe / Addominali", file:"giorno3.pdf"},
+ {dow:5, name:"Venerdì", day:"Giorno 4", desc:"Mix parte superiore", file:"giorno4.pdf"},
+ {dow:6, name:"Sabato", day:"Riposo", desc:"Nessun allenamento programmato", file:null},
+ {dow:0, name:"Domenica", day:"Riposo", desc:"Nessun allenamento programmato", file:null}
 ];
 
 const now = new Date();
@@ -73,28 +74,37 @@ document.getElementById("date").textContent =
 document.getElementById("todayTitle").textContent = d.day;
 document.getElementById("todayDesc").textContent = d.desc;
 
-function openDay(item){
-  if(!item.page) return;
-  const viewer=document.getElementById("viewer");
-  document.getElementById("viewerTitle").textContent=item.day;
-  document.getElementById("pdf").src=`scheda_allenamento.pdf#page=${item.page}`;
-  viewer.style.display="block";
+const todayBtn = document.getElementById("todayBtn");
+if (!d.file) {
+  todayBtn.disabled = true;
+  todayBtn.textContent = "Nessun allenamento oggi";
+} else {
+  todayBtn.addEventListener("click", () => openDay(d));
 }
-document.getElementById("todayBtn").addEventListener("click",()=>openDay(d));
-document.getElementById("close").addEventListener("click",()=>{
-  document.getElementById("pdf").src="";
-  document.getElementById("viewer").style.display="none";
+
+function openDay(item){
+  if(!item.file) return;
+  const viewer = document.getElementById("viewer");
+  document.getElementById("viewerTitle").textContent = item.day;
+  document.getElementById("pdf").src = item.file;
+  viewer.style.display = "block";
+}
+
+document.getElementById("close").addEventListener("click", () => {
+  document.getElementById("pdf").src = "";
+  document.getElementById("viewer").style.display = "none";
 });
 
-const week=document.getElementById("week");
-days.forEach(item=>{
- const row=document.createElement("div");
- row.className="day"+(item.dow===today?" active":"");
- row.innerHTML=`<div class="dot"></div><b>${item.name.slice(0,3).toUpperCase()}</b><span><strong>${item.day}</strong><br><small>${item.desc}</small></span>`;
- if(item.page){
-   const b=document.createElement("button");
-   b.className="open";b.type="button";b.textContent="Apri";
-   b.addEventListener("click",()=>openDay(item));row.appendChild(b);
+const week = document.getElementById("week");
+days.forEach(item => {
+ const row = document.createElement("div");
+ row.className = "day" + (item.dow === today ? " active" : "");
+ row.innerHTML = `<div class="dot"></div><b>${item.name.slice(0,3).toUpperCase()}</b><span><strong>${item.day}</strong><br><small>${item.desc}</small></span>`;
+ if(item.file){
+   const b = document.createElement("button");
+   b.className = "open"; b.type = "button"; b.textContent = "Apri";
+   b.addEventListener("click", () => openDay(item));
+   row.appendChild(b);
  }
  week.appendChild(row);
 });
