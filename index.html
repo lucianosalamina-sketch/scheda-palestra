@@ -40,7 +40,7 @@ button{width:100%;min-height:52px;border:0;border-radius:14px;background:#111827
 <small>Allenamento di oggi</small>
 <h2 id="todayTitle" style="margin:7px 0 0"></h2>
 <div id="todayDesc" class="sub" style="margin:4px 0 0"></div>
-<button id="todayBtn" type="button">Apri allenamento</button>
+<button id="todayBtn" type="button">Apri scheda completa</button>
 </section>
 
 <section class="card">
@@ -83,14 +83,10 @@ document.getElementById("date").textContent =
 document.getElementById("todayTitle").textContent = d.day;
 document.getElementById("todayDesc").textContent = d.desc;
 
+// Il pulsante in alto apre sempre la scheda completa
 const todayBtn = document.getElementById("todayBtn");
-if (!d.file) {
-  todayBtn.textContent = "Vedi scheda completa";
-  todayBtn.addEventListener("click", () => openPdfFile("scheda_allenamento.pdf", "Scheda Completa"));
-} else {
-  todayBtn.textContent = "Apri allenamento";
-  todayBtn.addEventListener("click", () => openPdfFile(d.file, d.day));
-}
+todayBtn.textContent = "Apri scheda completa";
+todayBtn.addEventListener("click", () => openPdfFile("scheda_allenamento.pdf", "Scheda Completa"));
 
 function openPdfFile(filePath, title){
   const viewer = document.getElementById("viewer");
